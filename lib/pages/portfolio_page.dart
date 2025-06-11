@@ -6,7 +6,7 @@ class PortfolioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(top: 35), // distância do topo
+        padding: const EdgeInsets.only(top: 20), // distância do topo
     child: Align(
     alignment: Alignment.topCenter,
     child: Column(
