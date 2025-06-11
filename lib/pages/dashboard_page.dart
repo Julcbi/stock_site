@@ -5,10 +5,38 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+    return Padding(
+        padding: const EdgeInsets.only(top: 35), // distância do topo
+    child: Align(
+    alignment: Alignment.topCenter,
+    child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    colors: [Color(0xFF6A11CB), Color(0xFF6A11CB)]
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.trending_up, color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 10),
+            const GradientText(
+                'Invisto',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                gradient: LinearGradient(
+                    colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                ),
+           ),
+          ],
+        ),
+        const SizedBox(height: 30),
           GradientText(
             'Welcome to',
             style: const TextStyle(
@@ -58,6 +86,7 @@ class DashboardPage extends StatelessWidget {
           ),
         ],
       ),
+     ),
     );
   }
 }

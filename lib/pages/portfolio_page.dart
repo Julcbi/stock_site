@@ -5,12 +5,15 @@ class PortfolioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+    return Padding(
+        padding: const EdgeInsets.only(top: 35), // distância do topo
+    child: Align(
+    alignment: Alignment.topCenter,
+    child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
           GradientText(
-            'Welcome to',
+            'Your',
             style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
@@ -23,7 +26,7 @@ class PortfolioPage extends StatelessWidget {
             ),
           ),
           GradientText(
-            'Invisto',
+            'Portfolio',
             style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
@@ -37,26 +40,15 @@ class PortfolioPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const Text(
-            'Your intelligent stock market companion.\nTrack, analyze, and invest with confidence.',
+            'Track your investments and monitor your portfolio performance.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.location_on_outlined, color: Colors.grey, size: 18),
-              SizedBox(width: 6),
-              Text(
-                'Global Markets',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
         ],
+      ),
       ),
     );
   }
