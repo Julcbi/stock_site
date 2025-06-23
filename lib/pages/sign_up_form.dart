@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stock_site/pages/home_page.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -71,6 +72,10 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
                   // Ação de cadastro
                 },
                 style: ElevatedButton.styleFrom(
