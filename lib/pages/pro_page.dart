@@ -78,9 +78,205 @@ class ProPage extends StatelessWidget {
             ),
           ],
         ),
-      )
+      ),
+      const SizedBox(height: 40), // ✅ Aqui está OK
+
+      // A partir daqui seguem os cards de plano:
+      const Text(
+        'Choose Your Plan',
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      const Text(
+        'Start your 14-day free trial. Cancel anytime.',
+        style: TextStyle(color: Colors.grey),
+      ),
+      const SizedBox(height: 24),
+
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            PricingCard(
+              title: 'Invisto Pro',
+              price: '\$29.99',
+              period: 'month',
+              features: [
+                'Advanced charting tools',
+                'Real-time market data',
+                'AI-powered insights',
+                'Portfolio optimization',
+                'Premium research reports',
+                'Priority customer support',
+                'Mobile app access',
+                'API access for developers',
+              ],
+            ),
+            SizedBox(width: 20),
+            PricingCard(
+              title: 'Invisto Pro (Yearly)',
+              price: '\$299.99',
+              period: 'year',
+              features: [
+                'Advanced charting tools',
+                'Real-time market data',
+                'AI-powered insights',
+                'Portfolio optimization',
+                'Premium research reports',
+                'Priority customer support',
+                'Mobile app access',
+                'API access for developers',
+                'Save 17%',
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 40),
+
+      Text(
+        'Trusted by Professionals',
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 20),
+
+      Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 20,
+        runSpacing: 20,
+        children: [
+          TestimonialCard(
+            stars: 5,
+            text: '"Invisto Pro has transformed how I analyze markets. The AI insights are incredibly accurate."',
+            name: 'Sarah Chen',
+            role: 'Portfolio Manager',
+          ),
+          TestimonialCard(
+            stars: 5,
+            text: '"Real-time alerts have helped me catch opportunities I would have missed otherwise."',
+            name: 'Michael Rodriguez',
+            role: 'Day Trader',
+          ),
+          TestimonialCard(
+            stars: 5,
+            text: '"The advanced analytics give me the edge I need to provide better advice to my clients."',
+            name: 'Emily Johnson',
+            role: 'Financial Advisor',
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 60),
+      const Text(
+        'Frequently Asked Questions',
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 24),
+
+      ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 700),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: const [
+            FAQItem(
+              question: 'Can I cancel my subscription anytime?',
+              answer: "Yes, you can cancel your subscription at any time. You'll continue to have access to Pro features until the end of your billing period.",
+            ),
+            FAQItem(
+              question: 'Is there a free trial?',
+              answer: 'Yes, we offer a 14-day free trial with full access to all Pro features. No credit card required to start.',
+            ),
+            FAQItem(
+              question: 'What payment methods do you accept?',
+              answer: 'We accept all major credit cards, PayPal, and bank transfers for annual subscriptions.',
+            ),
+            FAQItem(
+              question: 'Do you offer refunds?',
+              answer: "We offer a 30-day money-back guarantee if you're not satisfied with Invisto Pro.",
+            ),
+          ],
+        ),
+      ),
+
+
     ],
       ),
+      ),
+    );
+
+  }
+}
+class PricingCard extends StatelessWidget {
+  final String title;
+  final String price;
+  final String period;
+  final List<String> features;
+  final VoidCallback? onPressed;
+
+  const PricingCard({
+    super.key,
+    required this.title,
+    required this.price,
+    required this.period,
+    required this.features,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 300,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.deepPurpleAccent),
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Center(
+            child: Text.rich(
+              TextSpan(
+                text: price,
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                    text: '/$period',
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ...features.map((f) => Row(
+            children: [
+              const Icon(Icons.check, color: Colors.green, size: 20),
+              const SizedBox(width: 8),
+              Expanded(child: Text(f)),
+            ],
+          )),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: onPressed ?? () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurpleAccent,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Start 14-Day Free Trial'),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -156,6 +352,109 @@ class FeatureCard extends StatelessWidget {
                 Text(description,
                     style: const TextStyle(color: Colors.grey)),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TestimonialCard extends StatelessWidget {
+  final int stars;
+  final String text;
+  final String name;
+  final String role;
+
+  const TestimonialCard({
+    super.key,
+    required this.stars,
+    required this.text,
+    required this.name,
+    required this.role,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 280,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: List.generate(
+              stars,
+                  (index) => const Icon(Icons.star, color: Colors.amber, size: 20),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            text,
+            style: const TextStyle(
+              fontStyle: FontStyle.italic,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            name,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            role,
+            style: const TextStyle(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FAQItem extends StatelessWidget {
+  final String question;
+  final String answer;
+
+  const FAQItem({
+    super.key,
+    required this.question,
+    required this.answer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            question,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            answer,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 15,
             ),
           ),
         ],
