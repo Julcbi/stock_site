@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
-import 'pages/home_page.dart';
+import 'package:flutter/services.dart';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

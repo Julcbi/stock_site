@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import '../data/mock_portfolio.dart';
+import '../widgets/PerformanceTab.dart';
 
 class PortfolioPage extends StatelessWidget {
   const PortfolioPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final double totalValue = mockHoldings.fold(0, (sum, h) => sum + h.totalValue);
+    final double totalGain = mockHoldings.fold(0, (sum, h) => sum + h.gainLoss);
+    final double totalCost = mockHoldings.fold(0, (sum, h) => sum + (h.avgPrice * h.shares));
+    final double percentGain = totalCost > 0 ? (totalGain / totalCost) * 100 : 0;
+    final int holdingsCount = mockHoldings.length;
+
     return DefaultTabController(
-      length: 3,
+    length: 3,
       child: Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(top: 20),
@@ -47,26 +56,27 @@ class PortfolioPage extends StatelessWidget {
                     children: [
                       PortfolioStatCard(
                         label: 'Total Value',
-                        value: '\$8.691,26',
+                        value: '\$${totalValue.toStringAsFixed(2)}',
                         subtext: 'Portfolio value',
                         icon: Icons.attach_money,
                       ),
                       const SizedBox(width: 16),
                       PortfolioStatCard(
                         label: 'Total Gain/Loss',
-                        value: '+\$191.26',
-                        subtext: '+2.25%',
-                        valueColor: Colors.green,
+                        value: '${totalGain >= 0 ? '+' : '-'}\$${totalGain.abs().toStringAsFixed(2)}',
+                        subtext: '${percentGain >= 0 ? '+' : '-'}${percentGain.abs().toStringAsFixed(2)}%',
+                        valueColor: totalGain >= 0 ? Colors.green : Colors.red,
                         icon: Icons.percent,
                       ),
                       const SizedBox(width: 16),
                       PortfolioStatCard(
                         label: 'Holdings',
-                        value: '3',
+                        value: '$holdingsCount',
                         subtext: 'Active positions',
                         icon: Icons.track_changes,
                       ),
-                    ],
+
+    ],
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -104,51 +114,43 @@ class _TabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // Ajusta para caber todo conteúdo
       height: 700,
       child: TabBarView(
         children: [
-          ListView(
+          // Holdings
+          ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              HoldingCard(
-                ticker: 'AAPL',
-                company: 'Apple Inc.',
-                shares: 10,
-                avgPrice: 150.00,
-                currentPrice: 175.43,
-                totalGain: 254.30,
-                percentGain: 16.95,
-              ),
-              SizedBox(height: 12),
-              HoldingCard(
-                ticker: 'GOOGL',
-                company: 'Alphabet Inc.',
-                shares: 2,
-                avgPrice: 2800.00,
-                currentPrice: 2847.23,
-                totalGain: 94.46,
-                percentGain: 1.69,
-              ),
-              SizedBox(height: 12),
-              HoldingCard(
-                ticker: 'TSLA',
-                company: 'Tesla Inc.',
-                shares: 5,
-                avgPrice: 280.00,
-                currentPrice: 248.50,
-                totalGain: -157.50,
-                percentGain: -11.25,
-              ),
-            ],
+            itemCount: mockHoldings.length,
+            itemBuilder: (context, index) {
+              final holding = mockHoldings[index];
+              return Column(
+                children: [
+                  HoldingCard(
+                    ticker: holding.symbol,
+                    company: holding.company,
+                    shares: holding.shares,
+                    avgPrice: holding.avgPrice,
+                    currentPrice: holding.currentPrice,
+                    totalGain: holding.gainLoss,
+                    percentGain: holding.gainLossPercent,
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              );
+            },
           ),
-          Center(child: Text('Watchlist content')),
-          Center(child: Text('Performance content')),
+
+          // Watchlist (pode deixar um placeholder por enquanto)
+          const Center(child: Text('Watchlist content')),
+
+          // Performance (🔥 aqui está sua nova aba)
+          const PerformanceTab(),
         ],
       ),
     );
   }
 }
+
 
 
 // GradientText
