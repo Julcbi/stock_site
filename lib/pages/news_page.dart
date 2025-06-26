@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import '../widgets/news_card.dart';
+import '../data/mock_news.dart';
 
 class NewsPage extends StatelessWidget {
   const NewsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(top: 20), // distância do topo
-    child: Align(
-    alignment: Alignment.topCenter,
-    child: Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           GradientText(
             'Financial News & Analysis',
             style: const TextStyle(
@@ -34,11 +34,87 @@ class NewsPage extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-        ],
+
+      const SizedBox(height: 24),
+
+// 🔍 Barra de pesquisa
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search news...',
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onChanged: (value) {
+            // Lógica de busca (mock) futura
+          },
+        ),
       ),
+
+      const SizedBox(height: 20),
+
+// 🧭 Botões de categorias
+      SizedBox(
+        height: 40,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            _buildCategoryChip('All News'),
+            _buildCategoryChip('Market'),
+            _buildCategoryChip('Earnings'),
+            _buildCategoryChip('Technology'),
+            _buildCategoryChip('Corporate'),
+            _buildCategoryChip('Commodities'),
+            _buildCategoryChip('Crypto'),
+          ],
+        ),
+      ),
+      const SizedBox(height: 20),
+
+// 📰 Lista de notícias mock
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: mockNewsList.length,
+          itemBuilder: (context, index) {
+            final news = mockNewsList[index];
+            return NewsCard(news: news);
+          },
+        ),
+      ),
+
+
+    ],
+
+      ),
+
+    );
+  }
+
+  Widget _buildCategoryChip(String label) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.black87,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
+
+
 }
 
 class GradientText extends StatelessWidget {
