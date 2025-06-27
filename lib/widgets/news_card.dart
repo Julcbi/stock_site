@@ -10,10 +10,11 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.all(4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 3,
+      elevation: 2,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Top Category Tag
@@ -38,16 +39,30 @@ class NewsCard extends StatelessWidget {
             ),
           ),
 
+
+
           // Conteúdo
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(news.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text(news.description, style: const TextStyle(fontSize: 14, color: Colors.black87)),
-                const SizedBox(height: 8),
+                Text(
+                  news.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  news.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: Colors.black87),
+                ),
+
+
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Text(news.source, style: const TextStyle(color: Colors.grey)),
