@@ -12,6 +12,55 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _agreeTerms = false;
   bool _obscurePassword = true;
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  void _handleSignUp() {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showErrorDialog("Please fill in all fields.");
+      return;
+    }
+
+    if (!_agreeTerms) {
+      _showErrorDialog("You must agree to the Terms and Privacy Policy.");
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showErrorDialog("Passwords do not match.");
+      return;
+    }
+
+    // Navega para HomePage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Validation Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -22,13 +71,13 @@ class _SignUpFormState extends State<SignUpForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInputField('Full Name', Icons.person_outline, 'Enter your full name'),
+            _buildInputField('Full Name', Icons.person_outline, 'Enter your full name', _nameController),
             const SizedBox(height: 16),
-            _buildInputField('Email', Icons.email_outlined, 'Enter your email'),
+            _buildInputField('Email', Icons.email_outlined, 'Enter your email', _emailController),
             const SizedBox(height: 16),
-            _buildPasswordField('Password', 'Create a password'),
+            _buildPasswordField('Password', 'Create a password', _passwordController),
             const SizedBox(height: 16),
-            _buildPasswordField('Confirm Password', 'Confirm your password'),
+            _buildPasswordField('Confirm Password', 'Confirm your password', _confirmPasswordController),
             const SizedBox(height: 16),
 
             // Checkbox
@@ -71,13 +120,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
-                  // Ação de cadastro
-                },
+                onPressed: _handleSignUp,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
@@ -98,14 +141,14 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-
-  Widget _buildInputField(String label, IconData icon, String hint) {
+  Widget _buildInputField(String label, IconData icon, String hint, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon),
@@ -116,13 +159,14 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  Widget _buildPasswordField(String label, String hint) {
+  Widget _buildPasswordField(String label, String hint, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           obscureText: _obscurePassword,
           decoration: InputDecoration(
             hintText: hint,

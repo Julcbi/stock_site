@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
-import '../data/mock_stocks.dart';
 import '../widgets/stock_card.dart';
 import '../models/stock.dart';
+import '../services/stock_api_service.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  late Future<List<Stock>> _futureStocks;
+ // late Future<List<Stock>> _futureIndices;
+  late Future<List<Stock>> _futureTopGainers;
+  late Future<List<Stock>> _futureTopLosers;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureStocks = StockApiService.fetchMarketStocks();
+    //_futureIndices = StockApiService.fetchIndexCards();
+    _futureTopGainers = StockApiService.fetchTopGainers();
+    _futureTopLosers = StockApiService.fetchTopLosers();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,31 +64,47 @@ class DashboardPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Search bar
-          SizedBox(
-            width: 300,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search stocks...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              ),
-            ),
-          ),
+          // // Search bar
+          // SizedBox(
+          //   width: 300,
+          //   child: TextField(
+          //     decoration: InputDecoration(
+          //       hintText: 'Search stocks...',
+          //       prefixIcon: const Icon(Icons.search),
+          //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          //       contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          //     ),
+          //   ),
+          // ),
 
           const SizedBox(height: 24),
 
-          // Cards do topo (índices)
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 16,
-            runSpacing: 16,
-            children: indexCards.map((stock) => SizedBox(
-              width: 200, // 🔥 define a largura ideal para caber lado a lado
-              child: StockCard(stock: stock),
-            )).toList(),
-          ),
+          // // Cards do topo (índices)
+          // FutureBuilder<List<Stock>>(
+          //   future: _futureIndices,
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return const CircularProgressIndicator();
+          //     } else if (snapshot.hasError) {
+          //       return Text('Erro: ${snapshot.error}');
+          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          //       return const Text('Nenhum índice encontrado.');
+          //     }
+          //
+          //     final indices = snapshot.data!;
+          //     return Wrap(
+          //       alignment: WrapAlignment.center,
+          //       spacing: 16,
+          //       runSpacing: 16,
+          //       children: indices.map((stock) => SizedBox(
+          //         width: 200,
+          //         child: StockCard(stock: stock),
+          //       )).toList(),
+          //     );
+          //   },
+          // ),
+
+
 
 
           const SizedBox(height: 32),
@@ -77,14 +114,43 @@ class DashboardPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildStockGroup('📈 Top Gainers', topGainers),
+                child: FutureBuilder<List<Stock>>(
+                  future: _futureTopGainers,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Erro: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('Nenhum top gainer encontrado.');
+                    }
+
+                    return _buildStockGroup('📈 Top Gainers', snapshot.data!);
+                  },
+                ),
+
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildStockGroup('📉 Top Losers', topLosers),
+                child: FutureBuilder<List<Stock>>(
+                  future: _futureTopLosers,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Erro: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('Nenhum top loser encontrado.');
+                    }
+
+                    return _buildStockGroup('📉 Top Losers', snapshot.data!);
+                  },
+                ),
+
               ),
             ],
           ),
+
 
           const SizedBox(height: 32),
 
@@ -102,20 +168,49 @@ class DashboardPage extends StatelessWidget {
 
           Padding(
             padding: const EdgeInsets.all(16),
-            child: GridView.builder(
-              shrinkWrap: true, // ✅ permite altura dinâmica
-              physics: const NeverScrollableScrollPhysics(), // ✅ scroll é controlado pelo SingleChildScrollView
-              itemCount: marketStocks.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 2.1,
-              ),
-              itemBuilder: (context, index) {
-                return StockCard(stock: marketStocks[index]);
+            child: FutureBuilder<List<Stock>>(
+              future: _futureStocks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Erro: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text('Nenhuma ação encontrada.');
+                }
+
+                final stocks = snapshot.data!;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: stocks.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 2.1,
+                  ),
+                  itemBuilder: (context, index) {
+                    final stock = stocks[index];
+                    if (stock.isIndex == true) {
+                      return StockCard(stock: stock);
+                    }
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/stock_detail',
+                          arguments: stock.symbol,
+                        );
+                      },
+                      child: StockCard(stock: stock),
+                    );
+                  },
+                );
               },
-            ),
+            )
+
           ),
 
 

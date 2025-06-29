@@ -11,6 +11,39 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _showPassword = false;
   bool _rememberMe = false;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _handleSignIn() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      // Mostra alerta se campos estiverem vazios
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Incomplete fields'),
+          content: const Text('Please fill in both email and password to continue.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Tudo preenchido, pode navegar
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -22,9 +55,10 @@ class _SignInFormState extends State<SignInForm> {
           children: [
             // Campo Email
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
-                prefixIcon: Icon(Icons.email_outlined),
+                prefixIcon: const Icon(Icons.email_outlined),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -32,6 +66,7 @@ class _SignInFormState extends State<SignInForm> {
 
             // Campo Senha
             TextField(
+              controller: _passwordController,
               obscureText: !_showPassword,
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -63,12 +98,7 @@ class _SignInFormState extends State<SignInForm> {
                 const Text("Remember me"),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
-                  },
+                  onPressed: null, // Desativado
                   child: const Text(
                     'Forgot password?',
                     style: TextStyle(color: Color(0xFF6A11CB)),
@@ -90,12 +120,7 @@ class _SignInFormState extends State<SignInForm> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
-                  },
+                  onPressed: _handleSignIn,
                   child: const Text('Sign In', style: TextStyle(color: Colors.white)),
                 ),
               ),

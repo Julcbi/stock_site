@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/news.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsCard extends StatelessWidget {
   final News news;
@@ -26,20 +27,34 @@ class NewsCard extends StatelessWidget {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(news.category, style: const TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(
+                news.category,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
 
-          // (Opcional) Imagem mock
+          // Imagem da notícia
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: Container(
+            child: news.imageUrl.isNotEmpty
+                ? Image.network(
+              news.imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                ),
+              ),
+            )
+                : Container(
               color: Colors.grey[300],
-              child: const Center(child: Icon(Icons.image, size: 50, color: Colors.grey)),
+              child: const Center(
+                child: Icon(Icons.image, size: 50, color: Colors.grey),
+              ),
             ),
           ),
-
-
 
           // Conteúdo
           Padding(
@@ -60,39 +75,46 @@ class NewsCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12, color: Colors.black87),
                 ),
-
-
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     Text(news.source, style: const TextStyle(color: Colors.grey)),
                     const SizedBox(width: 16),
-                    Icon(Icons.access_time, size: 16, color: Colors.grey),
+                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
                     Text(
                       DateFormat.yMMMMd('en_US').format(news.publishedAt),
                       style: const TextStyle(color: Colors.grey),
                     ),
-
                   ],
                 ),
                 const SizedBox(height: 12),
 
-                Wrap(
-                  spacing: 8,
-                  children: news.tags
-                      .map((tag) => Chip(
-                    label: Text(tag),
-                    avatar: const Icon(Icons.trending_up, size: 16),
-                  ))
-                      .toList(),
-                ),
+                // Tags (se tiver)
+                if (news.tags.isNotEmpty)
+                  Wrap(
+                    spacing: 8,
+                    children: news.tags
+                        .map((tag) => Chip(
+                      label: Text(tag),
+                      avatar: const Icon(Icons.trending_up, size: 16),
+                    ))
+                        .toList(),
+                  ),
 
                 const SizedBox(height: 12),
 
+                // Botão para abrir link externo
                 OutlinedButton.icon(
-                  onPressed: () {
-                    // futuramente: abrir link em navegador
+                  onPressed: () async {
+                    final uri = Uri.parse(news.link);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Não foi possível abrir o link.')),
+                      );
+                    }
                   },
                   icon: const Icon(Icons.open_in_new),
                   label: const Text('Read Full Article'),

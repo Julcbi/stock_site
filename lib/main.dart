@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
 import 'package:flutter/services.dart';
+import 'pages/stock_detail_page.dart';
 
 
 void main() {
@@ -23,8 +24,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/stock_detail': (context) {
+          final symbol = ModalRoute.of(context)!.settings.arguments as String;
+          return StockDetailPage(symbol: symbol);
+        },
+      },
     );
+
   }
 }
 

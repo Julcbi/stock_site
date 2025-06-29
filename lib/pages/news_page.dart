@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/news_card.dart';
-import '../data/mock_news.dart';
 import '../models/news.dart';
+import '../services/news_api_service.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -13,26 +13,47 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   String selectedCategory = 'All News';
   String searchQuery = '';
+  late Future<List<News>> _futureNews;
 
-  final List<String> categories = [
-    'All News',
-    'Market',
-    'Earnings',
-    'Technology',
-    'Corporate',
-    'Commodities',
-    'Crypto',
+  // final List<String> categories = [
+  //   'All News',
+  //   'Market',
+  //   'Earnings',
+  //   'Technology',
+  //   'Corporate',
+  //   'Commodities',
+  //   'Crypto',
+  // ];
+
+  @override
+  void initState() {
+    super.initState();
+    _futureNews = NewsApiService.fetchLatestNews();
+  }
+
+  List<String> palavrasChave = [
+    'apple', 'tesla', 'microsoft', 'amazon',
+    'google', 'meta', 'stock', 'nasdaq',
+    'dow jones', 's&p', 'market', 'equity',
+    'aapl', 'tsla', 'msft', 'amzn', 'googl'
   ];
 
-  List<News> get filteredNews {
-    return mockNewsList.where((news) {
-      final matchesCategory =
-          selectedCategory == 'All News' || news.category == selectedCategory;
-      final matchesSearch = searchQuery.isEmpty ||
-          news.title.toLowerCase().contains(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+  List<News> filterNews(List<News> allNews) {
+    return allNews.where((news) {
+      final title = news.title.toLowerCase();
+      final description = news.description.toLowerCase();
+      final query = searchQuery.toLowerCase();
+
+      final matchesSearch = query.isEmpty || title.contains(query);
+      final matchesKeyword = palavrasChave.any((palavra) =>
+      title.contains(palavra) || description.contains(palavra)
+      );
+
+      return matchesSearch && matchesKeyword;
     }).toList();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,62 +103,77 @@ class _NewsPageState extends State<NewsPage> {
           const SizedBox(height: 16),
 
           // 🧭 Botões de categorias
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                final isSelected = selectedCategory == category;
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedCategory = category;
-                    });
-                  },
-                  child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.deepPurple[100]
-                          : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        color: isSelected
-                            ? Colors.deepPurple[800]
-                            : Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          // SizedBox(
+          //   height: 40,
+          //   child: ListView.separated(
+          //     scrollDirection: Axis.horizontal,
+          //     itemCount: categories.length,
+          //     separatorBuilder: (_, __) => const SizedBox(width: 8),
+          //     itemBuilder: (context, index) {
+          //       final category = categories[index];
+          //       final isSelected = selectedCategory == category;
+          //
+          //       return GestureDetector(
+          //         onTap: () {
+          //           setState(() {
+          //             selectedCategory = category;
+          //           });
+          //         },
+          //         child: Container(
+          //           padding:
+          //           const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //           decoration: BoxDecoration(
+          //             color: isSelected
+          //                 ? Colors.deepPurple[100]
+          //                 : Colors.grey[200],
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //           child: Text(
+          //             category,
+          //             style: TextStyle(
+          //               color: isSelected
+          //                   ? Colors.deepPurple[800]
+          //                   : Colors.black87,
+          //               fontWeight: FontWeight.w500,
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
 
           const SizedBox(height: 20),
 
-          // 📰 Lista filtrada de notícias
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: filteredNews.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.75,
-            ),
-            itemBuilder: (context, index) {
-              final news = filteredNews[index];
-              return NewsCard(news: news);
+          // 📰 Lista filtrada de notícias da API
+          FutureBuilder<List<News>>(
+            future: _futureNews,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Erro ao carregar notícias: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Text('Nenhuma notícia encontrada.');
+              }
+
+              final filtered = filterNews(snapshot.data!);
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filtered.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                ),
+                itemBuilder: (context, index) {
+                  final news = filtered[index];
+                  return NewsCard(news: news);
+                },
+              );
             },
           ),
         ],
