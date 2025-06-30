@@ -30,11 +30,10 @@ class News {
       source: json['source'] ?? '',
       tags: [],
       imageUrl: json['image'] ?? '',
-      publishedAt: DateTime.tryParse(json['datetime'] != null
-          ? (json['datetime'] * 1000).toString()
-          : '') ?? DateTime.now(),
+      publishedAt: DateTime.fromMillisecondsSinceEpoch((json['datetime'] ?? 0) * 1000),
       link: json['url'] ?? '',
     );
   }
+
 
 }

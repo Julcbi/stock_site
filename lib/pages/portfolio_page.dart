@@ -15,7 +15,7 @@ class PortfolioPage extends StatelessWidget {
     final int holdingsCount = mockHoldings.length;
 
     return DefaultTabController(
-    length: 3,
+    length: 2,
       child: Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(top: 20),
@@ -91,7 +91,6 @@ class PortfolioPage extends StatelessWidget {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: 'Holdings'),
-                      Tab(text: 'Watchlist'),
                       Tab(text: 'Performance'),
                     ],
                   ),
@@ -139,9 +138,6 @@ class _TabContent extends StatelessWidget {
               );
             },
           ),
-
-          // Watchlist (pode deixar um placeholder por enquanto)
-          const Center(child: Text('Watchlist content')),
 
           // Performance (🔥 aqui está sua nova aba)
           const PerformanceTab(),

@@ -3,6 +3,7 @@ import 'dashboard_page.dart';
 import 'news_page.dart';
 import 'portfolio_page.dart';
 import 'pro_page.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -100,16 +101,27 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
 
-                  // ÍCONES à direita
+                  // ÍCONES à direita + botão de busca
                   Row(
-                    children: const [
-                      Icon(Icons.wb_sunny_outlined, size: 20),
-                      SizedBox(width: 16),
-                      Icon(Icons.notifications_none_outlined, size: 20),
-                      SizedBox(width: 16),
-                      Icon(Icons.person_outline, size: 20),
+                    children: [
+                      const Icon(Icons.wb_sunny_outlined, size: 20),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.notifications_none_outlined, size: 20),
+                      const SizedBox(width: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const SearchPage()),
+                          );
+                        },
+                        child: const Icon(Icons.search, size: 20),
+                      ),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.person_outline, size: 20),
                     ],
                   ),
+
                 ],
               ),
 
