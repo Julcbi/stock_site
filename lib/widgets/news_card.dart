@@ -18,7 +18,7 @@ class NewsCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Category Tag
+          // Top category tag
           Padding(
             padding: const EdgeInsets.all(12),
             child: Container(
@@ -34,7 +34,7 @@ class NewsCard extends StatelessWidget {
             ),
           ),
 
-          // Imagem da notícia
+          // News image
           AspectRatio(
             aspectRatio: 16 / 9,
             child: news.imageUrl.isNotEmpty
@@ -56,7 +56,7 @@ class NewsCard extends StatelessWidget {
             ),
           ),
 
-          // Conteúdo
+          // News content
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -90,7 +90,7 @@ class NewsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                // Tags (se tiver)
+                // Tags (if available)
                 if (news.tags.isNotEmpty)
                   Wrap(
                     spacing: 8,
@@ -104,7 +104,7 @@ class NewsCard extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // Botão para abrir link externo
+                // Button to open external link
                 OutlinedButton.icon(
                   onPressed: () async {
                     final uri = Uri.parse(news.link);
@@ -112,7 +112,7 @@ class NewsCard extends StatelessWidget {
                       await launchUrl(uri, mode: LaunchMode.externalApplication);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Não foi possível abrir o link.')),
+                        const SnackBar(content: Text('Could not open the link.')),
                       );
                     }
                   },

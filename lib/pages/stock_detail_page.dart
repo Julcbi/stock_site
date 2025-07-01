@@ -61,7 +61,7 @@ class _StockDetailPageState extends State<StockDetailPage> {
       widget.symbol,
       range: _selectedRange,
     );
-    _newsFuture = NewsApiService.fetchStockNews(widget.symbol); // usando mesma API
+    _newsFuture = NewsApiService.fetchStockNews(widget.symbol);
     _profileFuture = StockApiService.fetchCompanyProfile(widget.symbol);
   }
 
@@ -76,9 +76,9 @@ class _StockDetailPageState extends State<StockDetailPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(child: Text("Erro ao carregar dados"));
+            return const Center(child: Text("Error loading data"));
           } else if (!snapshot.hasData) {
-            return const Center(child: Text("Sem dados disponíveis"));
+            return const Center(child: Text("No data available"));
           }
 
           final stock = snapshot.data!;
@@ -88,7 +88,7 @@ class _StockDetailPageState extends State<StockDetailPage> {
               .map((e) => FlSpot(e.key.toDouble(), e.value.close))
               .toList();
 
-// 👇 Adicione aqui (depois de criar `stock` e `spots`)
+
           final Color chartColor = stock.isUp ? Colors.green : Colors.red;
 
 

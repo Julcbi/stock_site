@@ -6,7 +6,7 @@ class HistoricalPrice {
 
   factory HistoricalPrice.fromJson(Map<String, dynamic> json) {
     return HistoricalPrice(
-      // Suporta formatos com ou sem hora
+
       date: DateTime.tryParse(json['date']) ?? DateTime.now(),
       close: double.tryParse(json['close'].toString()) ?? 0,
     );

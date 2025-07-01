@@ -9,11 +9,13 @@ class NewsApiService {
   static Future<List<News>> fetchLatestNews() async {
     final url = Uri.parse('https://finnhub.io/api/v1/news?category=general&token=$_apiKey');
     final resp = await http.get(url);
+
     if (resp.statusCode == 200) {
       final List data = jsonDecode(resp.body);
       return data.map((json) => News.fromFinnhubJson(json)).toList();
     }
-    throw Exception('Erro ao buscar notícias: ${resp.statusCode}');
+
+    throw Exception('Failed to fetch news: ${resp.statusCode}');
   }
 
   static Future<List<News>> fetchStockNews(String symbol) async {
@@ -24,9 +26,7 @@ class NewsApiService {
       final List data = jsonDecode(resp.body);
       return data.map((json) => News.fromFinnhubJson(json)).toList();
     } else {
-      throw Exception('Erro ao buscar notícias da ação $symbol');
+      throw Exception('Failed to fetch news for stock $symbol');
     }
   }
-
-
 }

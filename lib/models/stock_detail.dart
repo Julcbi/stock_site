@@ -1,4 +1,4 @@
-import 'historical_price.dart'; // ajuste o caminho se necessário
+import 'historical_price.dart';
 
 class StockDetail {
   final String symbol;
@@ -8,7 +8,7 @@ class StockDetail {
   final double changePercent;
   final bool isUp;
   final String description;
-  final List<HistoricalPrice> chartData; // ⬅️ Agora é uma lista com datas
+  final List<HistoricalPrice> chartData;
 
   StockDetail({
     required this.symbol,

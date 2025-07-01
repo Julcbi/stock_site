@@ -33,7 +33,7 @@ class StockApiService {
         );
       }).toList();
     } else {
-      throw Exception('Erro ao buscar ações ativas');
+      throw Exception('Failed to fetch active stocks');
     }
   }
 
@@ -63,7 +63,7 @@ class StockApiService {
         );
       }).toList();
     } else {
-      throw Exception('Erro ao buscar índices');
+      throw Exception('Failed to fetch indices');
     }
   }
 
@@ -108,7 +108,7 @@ class StockApiService {
 
       return prices.map((e) => HistoricalPrice.fromJson(e)).toList().reversed.toList();
     } else {
-      throw Exception('Erro ao buscar histórico de preços');
+      throw Exception('Failed to fetch historical prices');
     }
   }
 
@@ -139,7 +139,7 @@ class StockApiService {
         );
       }).toList();
     } else {
-      throw Exception('Erro ao buscar top gainers');
+      throw Exception('Failed to fetch top gainers');
     }
   }
 
@@ -168,7 +168,7 @@ class StockApiService {
         );
       }).toList();
     } else {
-      throw Exception('Erro ao buscar top losers');
+      throw Exception('Failed to fetch top losers');
     }
   }
 
@@ -181,7 +181,7 @@ class StockApiService {
       final List data = jsonDecode(response.body);
 
       if (data.isEmpty) {
-        throw Exception('Nenhum dado encontrado para $symbol');
+        throw Exception('No data found for $symbol');
       }
 
       final item = data[0];
@@ -201,7 +201,7 @@ class StockApiService {
         chartData: history,
       );
     } else {
-      throw Exception('Erro ao buscar detalhes da ação');
+      throw Exception('Failed to fetch stock details');
     }
   }
   static Future<List<Stock>> searchStocks(String query) async {
@@ -209,7 +209,7 @@ class StockApiService {
     final searchResponse = await http.get(searchUrl);
 
     if (searchResponse.statusCode != 200) {
-      throw Exception('Erro ao buscar ações');
+      throw Exception('Failed to search for stocks');
     }
 
     final List searchResults = jsonDecode(searchResponse.body);
@@ -231,7 +231,7 @@ class StockApiService {
           quoteResults = data;
         }
       } catch (e) {
-        print('Erro ao decodificar quoteResponse: $e');
+        print('Error decoding quoteResponse: $e');
       }
     }
 

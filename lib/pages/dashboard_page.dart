@@ -64,48 +64,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           const SizedBox(height: 24),
 
-          // // Search bar
-          // SizedBox(
-          //   width: 300,
-          //   child: TextField(
-          //     decoration: InputDecoration(
-          //       hintText: 'Search stocks...',
-          //       prefixIcon: const Icon(Icons.search),
-          //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          //       contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          //     ),
-          //   ),
-          // ),
-
           const SizedBox(height: 24),
-
-          // // Cards do topo (índices)
-          // FutureBuilder<List<Stock>>(
-          //   future: _futureIndices,
-          //   builder: (context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       return const CircularProgressIndicator();
-          //     } else if (snapshot.hasError) {
-          //       return Text('Erro: ${snapshot.error}');
-          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          //       return const Text('Nenhum índice encontrado.');
-          //     }
-          //
-          //     final indices = snapshot.data!;
-          //     return Wrap(
-          //       alignment: WrapAlignment.center,
-          //       spacing: 16,
-          //       runSpacing: 16,
-          //       children: indices.map((stock) => SizedBox(
-          //         width: 200,
-          //         child: StockCard(stock: stock),
-          //       )).toList(),
-          //     );
-          //   },
-          // ),
-
-
-
 
           const SizedBox(height: 32),
 
@@ -120,9 +79,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Text('Erro: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('Nenhum top gainer encontrado.');
+                      return const Text('No top gainers found.');
                     }
 
                     return _buildStockGroup('📈 Top Gainers', snapshot.data!);
@@ -138,9 +97,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Text('Erro: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('Nenhum top loser encontrado.');
+                      return const Text('No top losers found.');
                     }
 
                     return _buildStockGroup('📉 Top Losers', snapshot.data!);
@@ -174,9 +133,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Text('Erro: ${snapshot.error}');
+                  return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Text('Nenhuma ação encontrada.');
+                  return const Text('No stocks found.');
                 }
 
                 final stocks = snapshot.data!;

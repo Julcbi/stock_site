@@ -102,46 +102,7 @@ class _NewsPageState extends State<NewsPage> {
 
           const SizedBox(height: 16),
 
-          // 🧭 Botões de categorias
-          // SizedBox(
-          //   height: 40,
-          //   child: ListView.separated(
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: categories.length,
-          //     separatorBuilder: (_, __) => const SizedBox(width: 8),
-          //     itemBuilder: (context, index) {
-          //       final category = categories[index];
-          //       final isSelected = selectedCategory == category;
-          //
-          //       return GestureDetector(
-          //         onTap: () {
-          //           setState(() {
-          //             selectedCategory = category;
-          //           });
-          //         },
-          //         child: Container(
-          //           padding:
-          //           const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          //           decoration: BoxDecoration(
-          //             color: isSelected
-          //                 ? Colors.deepPurple[100]
-          //                 : Colors.grey[200],
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //           child: Text(
-          //             category,
-          //             style: TextStyle(
-          //               color: isSelected
-          //                   ? Colors.deepPurple[800]
-          //                   : Colors.black87,
-          //               fontWeight: FontWeight.w500,
-          //             ),
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
+
 
           const SizedBox(height: 20),
 
@@ -152,9 +113,9 @@ class _NewsPageState extends State<NewsPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
-                return Text('Erro ao carregar notícias: ${snapshot.error}');
+                return Text('Error loading news: ${snapshot.error}');
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Text('Nenhuma notícia encontrada.');
+                return const Text('No news found.');
               }
 
               final filtered = filterNews(snapshot.data!);

@@ -37,7 +37,7 @@ class _SignInFormState extends State<SignInForm> {
       return;
     }
 
-    // Tudo preenchido, pode navegar
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomePage()),

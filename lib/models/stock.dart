@@ -19,7 +19,7 @@ class Stock {
     required this.isIndex,
   });
 
-  // 🔧 ESTE É O fromJson QUE FALTAVA
+
   factory Stock.fromJson(Map<String, dynamic> json) {
     return Stock(
       symbol: json['symbol'] ?? '',
