@@ -200,16 +200,33 @@ class _StockDetailPageState extends State<StockDetailPage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Sector: ${profile.sector}'),
-                        Text('Industry: ${profile.industry}'),
-                        Text('Employees: ${profile.fullTimeEmployees}'),
-                        Text('CEO: ${profile.ceo}'),
-                        Text('Website: ${profile.website}'),
+                        if (profile.logo.isNotEmpty)
+                          Center(
+                            child: Image.network(
+                              profile.logo,
+                              height: 60,
+                            ),
+                          ),
                         const SizedBox(height: 12),
-                        Text('About:', style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(profile.description),
+                        Text('Company: ${profile.name}'),
+                        Text('Ticker: ${profile.ticker}'),
+                        Text('Exchange: ${profile.exchange}'),
+                        Text('Industry: ${profile.industry}'),
+                        Text('Country: ${profile.country}'),
+                        Text('IPO Date: ${profile.ipo}'),
+                        Text('Market Cap: ${_currencySymbol()}${_convert(profile.marketCapitalization).toStringAsFixed(2)} B'),
+                        Text('Outstanding Shares: ${profile.shareOutstanding.toStringAsFixed(2)}'),
+                        Text('Phone: ${profile.phone}'),
+                        GestureDetector(
+                          onTap: () => launchUrl(Uri.parse(profile.webUrl)),
+                          child: Text(
+                            profile.webUrl,
+                            style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                          ),
+                        ),
                       ],
                     );
+
                   },
                 ),
 

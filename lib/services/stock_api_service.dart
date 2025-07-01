@@ -263,25 +263,25 @@ class StockApiService {
     }).toList();
   }
 
+  static const String _finnhubBaseUrl = 'https://finnhub.io/api/v1';
+  static const String _finnhubApiKey = 'd1glqcpr01qn4ub817n0d1glqcpr01qn4ub817ng';
+
   static Future<CompanyProfile> fetchCompanyProfile(String symbol) async {
-    final url = Uri.parse('https://financialmodelingprep.com/api/v3/profile/$symbol?apikey=$_apiKey');
-    print('🔍 Fetching company profile: $url'); // DEBUG
+    final url = Uri.parse('$_finnhubBaseUrl/stock/profile2?symbol=$symbol&token=$_finnhubApiKey');
+    print('🔍 Fetching Finnhub company profile: $url'); // DEBUG
     final response = await http.get(url);
 
     print('📥 Status: ${response.statusCode}');
     print('📄 Body: ${response.body}');
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      if (data.isNotEmpty) {
-        return CompanyProfile.fromJson(data[0]);
-      } else {
-        throw Exception('Empty profile data');
-      }
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return CompanyProfile.fromJson(data);
     } else {
-      throw Exception('Failed to load company profile');
+      throw Exception('Failed to load Finnhub company profile');
     }
   }
+
 
 
 

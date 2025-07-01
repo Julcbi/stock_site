@@ -1,28 +1,46 @@
 class CompanyProfile {
-  final String sector;
+  final String name;
+  final String ticker;
+  final String exchange;
+  final String webUrl;
+  final String logo;
   final String industry;
-  final String ceo;
-  final String description;
-  final String website;
-  final int fullTimeEmployees;
+  final String ipo;
+  final double marketCapitalization;
+  final double shareOutstanding;
+  final String country;
+  final String phone;
+  final String currency;
 
   CompanyProfile({
-    required this.sector,
+    required this.name,
+    required this.ticker,
+    required this.exchange,
+    required this.webUrl,
+    required this.logo,
     required this.industry,
-    required this.ceo,
-    required this.description,
-    required this.website,
-    required this.fullTimeEmployees,
+    required this.ipo,
+    required this.marketCapitalization,
+    required this.shareOutstanding,
+    required this.country,
+    required this.phone,
+    required this.currency,
   });
 
   factory CompanyProfile.fromJson(Map<String, dynamic> json) {
     return CompanyProfile(
-      sector: json['sector'] ?? 'N/A',
-      industry: json['industry'] ?? 'N/A',
-      ceo: json['ceo'] ?? 'N/A',
-      description: json['description'] ?? 'N/A',
-      website: json['website'] ?? 'N/A',
-      fullTimeEmployees: json['fullTimeEmployees'] ?? 0,
+      name: json['name'] ?? 'N/A',
+      ticker: json['ticker'] ?? 'N/A',
+      exchange: json['exchange'] ?? 'N/A',
+      webUrl: json['weburl'] ?? 'N/A',
+      logo: json['logo'] ?? '',
+      industry: json['finnhubIndustry'] ?? 'N/A',
+      ipo: json['ipo'] ?? 'N/A',
+      marketCapitalization: (json['marketCapitalization'] ?? 0).toDouble(),
+      shareOutstanding: (json['shareOutstanding'] ?? 0).toDouble(),
+      country: json['country'] ?? 'N/A',
+      phone: json['phone'] ?? 'N/A',
+      currency: json['currency'] ?? 'N/A',
     );
   }
 }
